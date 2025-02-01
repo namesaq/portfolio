@@ -310,85 +310,75 @@ const openProjectDetails = (project: Project) => {
 
 <style scoped>
 .portfolio {
-  color: #F5F5F5;
-  background-color: #1A1A1A;
+  padding: 2rem;
+  color: var(--text-primary);
+  background: var(--bg-primary);
   min-height: 100vh;
-  padding: 80px 30px 30px;
+  transition: all 0.3s ease;
 }
 
 .section {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
+  background: var(--bg-primary);
+  transition: all 0.3s ease;
 }
 
 .title {
-  font-size: 3.5rem;
-  font-weight: 600;
-  letter-spacing: -0.02em;
-  margin-bottom: 3rem;
-  background: linear-gradient(90deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-primary);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
 }
 
 .projects {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
 }
 
 .project {
-  position: relative;
-  overflow: hidden;
-  transform-style: preserve-3d;
-  transform: perspective(1000px);
   border-radius: 20px;
-  aspect-ratio: 4/3;
+  overflow: hidden;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
   cursor: pointer;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
 }
 
 .project:hover {
-  transform: translateY(-10px);
+  transform: translateY(-5px);
+  border-color: var(--accent-primary);
   box-shadow: 0 10px 30px rgba(147, 51, 234, 0.1);
 }
 
-.project::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at var(--mouse-x) var(--mouse-y),
-    rgba(255, 255, 255, 0.1) 0%,
-    transparent 50%
-  );
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.project:hover::before {
-  opacity: 1;
+.project-content {
+  position: relative;
+  padding-top: 66.67%;
 }
 
 .project-image {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   background-size: cover;
   background-position: center;
-  transition: transform 0.5s ease;
 }
 
 .project-overlay {
   position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  opacity: 0;
-  transition: all 0.3s ease;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: flex-end;
-  padding: 2rem;
+  padding: 1.5rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .project:hover .project-overlay {
@@ -396,41 +386,37 @@ const openProjectDetails = (project: Project) => {
 }
 
 .project-info {
-  transform: translateY(20px);
-  transition: transform 0.3s ease;
-}
-
-.project:hover .project-info {
-  transform: translateY(0);
+  color: #fff;
 }
 
 .project-title {
   font-size: 1.5rem;
-  font-weight: 600;
   margin-bottom: 1rem;
-  color: #FFF;
 }
 
 .project-tags {
   display: flex;
-  gap: 0.5rem;
   flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
 .tag {
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
   border-radius: 100px;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+  color: var(--text-primary);
 }
 
 /* Модальное окно */
 .modal {
   position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.95);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -438,57 +424,46 @@ const openProjectDetails = (project: Project) => {
 }
 
 .modal-content {
-  width: 90%;
-  max-width: 1400px;
+  background: var(--bg-primary);
+  border-radius: 20px;
+  padding: 2rem;
+  max-width: 90%;
   max-height: 90vh;
-  background: #1A1A1A;
-  border-radius: 24px;
-  overflow: hidden;
+  overflow-y: auto;
   position: relative;
-  animation: modalAppear 0.5s ease forwards;
-  box-shadow: 0 20px 40px rgba(147, 51, 234, 0.15);
+  border: 1px solid var(--border-color);
 }
 
 .modal-close {
   position: absolute;
-  top: 2rem;
-  right: 2rem;
-  background: rgba(0, 0, 0, 0.5);
+  top: 1rem;
+  right: 1rem;
+  background: var(--bg-secondary);
   border: none;
-  color: #FFF;
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  cursor: pointer;
-  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
 }
 
 .modal-close:hover {
-  background: rgba(0, 0, 0, 0.8);
+  background: var(--hover-bg);
+  color: var(--accent-primary);
 }
 
 .modal-gallery {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 2rem;
-}
-
-.gallery-main {
-  width: 100%;
-  height: 50vh;
-  border-radius: 16px;
-  overflow: hidden;
+  display: grid;
+  gap: 2rem;
 }
 
 .gallery-main img {
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  border-radius: 10px;
 }
 
 .gallery-grid {
@@ -499,35 +474,14 @@ const openProjectDetails = (project: Project) => {
 
 .gallery-grid img {
   width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  border-radius: 12px;
+  border-radius: 10px;
   cursor: pointer;
   transition: transform 0.3s ease;
-  animation: fadeIn 0.5s ease forwards;
-  opacity: 0;
 }
 
 .gallery-grid img:hover {
   transform: scale(1.05);
-  box-shadow: 0 10px 20px rgba(147, 51, 234, 0.1);
 }
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.gallery-grid img:nth-child(1) { animation-delay: 0.1s; }
-.gallery-grid img:nth-child(2) { animation-delay: 0.2s; }
-.gallery-grid img:nth-child(3) { animation-delay: 0.3s; }
-.gallery-grid img:nth-child(4) { animation-delay: 0.4s; }
 
 /* Полноэкранное изображение */
 .fullscreen-image {

@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+:root {
+    /* Темная тема (по умолчанию) */
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #242424;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --accent-primary: rgb(147, 51, 234);
+    --accent-secondary: rgba(147, 51, 234, 0.8);
+    --border-color: rgba(147, 51, 234, 0.1);
+    --white-pure: #ffffff;
+    --white-muted: rgba(255, 255, 255, 0.7);
+    --shadow-color: rgba(147, 51, 234, 0.12);
+    --hover-bg: rgba(147, 51, 234, 0.1);
+}
+
+/* Светлая тема */
+[data-theme="light"] {
+    --bg-primary: #f8f9fa;
+    --bg-secondary: #ffffff;
+    --text-primary: #2d3436;
+    --text-secondary: #636e72;
+    --accent-primary: rgb(147, 51, 234);
+    --accent-secondary: rgba(147, 51, 234, 0.8);
+    --border-color: rgba(147, 51, 234, 0.1);
+    --white-pure: #2d3436;
+    --white-muted: #636e72;
+    --shadow-color: rgba(147, 51, 234, 0.08);
+    --hover-bg: rgba(147, 51, 234, 0.04);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}

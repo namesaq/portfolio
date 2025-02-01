@@ -96,15 +96,20 @@ const props = defineProps<{
 
 <style scoped>
 .about {
-  background-color: #1A1A1A;
   min-height: 100vh;
   padding: 80px 30px 30px;
-  color: #F5F5F5;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
 }
 
 .about-container {
   max-width: 1400px;
   margin: 0 auto;
+  background: var(--bg-primary);
+  transition: background-color 0.3s ease;
 }
 
 .hero-section {
@@ -116,9 +121,10 @@ const props = defineProps<{
   align-items: center;
   gap: 40px;
   padding: 40px;
-  background: linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+  background: var(--bg-secondary);
   border-radius: 24px;
-  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .profile-photo {
@@ -126,8 +132,9 @@ const props = defineProps<{
   height: 200px;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid rgba(255,255,255,0.1);
-  background: rgba(255,255,255,0.03);
+  border: 4px solid var(--border-color);
+  background: var(--bg-secondary);
+  transition: all 0.3s ease;
 }
 
 .profile-photo img {
@@ -141,14 +148,14 @@ const props = defineProps<{
   font-size: 3.5rem;
   font-weight: 600;
   margin-bottom: 1rem;
-  background: linear-gradient(90deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
 }
 
 .profession {
   font-size: 1.5rem;
-  color: rgba(255,255,255,0.7);
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
 }
 
 .content-grid {
@@ -159,17 +166,40 @@ const props = defineProps<{
 
 .section {
   padding: 30px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-secondary);
   border-radius: 20px;
-  transition: all 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  opacity: 0;
+  transform: translateY(30px);
+  animation: sectionAppear 0.5s ease-out forwards;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+}
+
+.personal-section {
+  animation-delay: 0.2s;
+}
+
+.skills-section {
+  animation-delay: 0.3s;
+}
+
+.experience-section {
+  animation-delay: 0.4s;
+}
+
+@keyframes sectionAppear {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .section:hover {
   transform: translateY(-5px);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-primary);
   box-shadow: 0 10px 30px rgba(147, 51, 234, 0.1);
+  transition: all 0.3s ease;
 }
 
 .section-header {
@@ -181,7 +211,7 @@ const props = defineProps<{
 .icon {
   font-size: 24px;
   margin-right: 15px;
-  color: #9D5BD2;
+  color: var(--accent-primary);
   opacity: 0.8;
 }
 
@@ -191,7 +221,7 @@ const props = defineProps<{
 }
 
 .skill-category h3 {
-  color: rgba(255,255,255,0.9);
+  color: var(--text-primary);
   margin-bottom: 15px;
 }
 
@@ -203,18 +233,18 @@ const props = defineProps<{
 
 .skill-tag {
   padding: 8px 16px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
   border-radius: 100px;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   transition: all 0.3s ease;
 }
 
 .skill-tag:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--hover-bg);
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-primary);
   box-shadow: 0 5px 15px rgba(147, 51, 234, 0.1);
 }
 
@@ -229,9 +259,11 @@ const props = defineProps<{
   grid-template-columns: 120px 1fr;
   gap: 20px;
   padding: 15px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-primary);
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
 }
 
 .timeline-item:hover {
@@ -239,17 +271,20 @@ const props = defineProps<{
 }
 
 .timeline-date {
-  color: rgba(255,255,255,0.6);
+  color: var(--text-secondary);
   font-size: 0.9rem;
+  font-weight: 500;
 }
 
 .timeline-content h3 {
-  color: rgba(255,255,255,0.9);
+  color: var(--text-primary);
   margin-bottom: 5px;
+  font-weight: 500;
 }
 
 .timeline-content p {
-  color: rgba(255,255,255,0.6);
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 @media (max-width: 768px) {
@@ -273,49 +308,44 @@ const props = defineProps<{
 }
 
 .info-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-primary);
   border-radius: 16px;
   padding: 1.5rem;
   margin-bottom: 2rem;
-  transition: transform 0.3s ease;
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
   position: relative;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
 }
 
 .info-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(255, 255, 255, 0.2);
+  border-color: var(--accent-primary);
   box-shadow: 0 10px 30px rgba(147, 51, 234, 0.1);
 }
 
 .birth-date {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   font-weight: 400;
   letter-spacing: 0.5px;
   text-align: center;
+  transition: all 0.3s ease;
 }
 
 .quote-card {
   display: none;
 }
 
-.personal-section {
-  background: rgba(255, 255, 255, 0.03);
-  animation: slideIn 0.8s ease forwards;
-  animation-delay: 0.6s;
-  opacity: 1;
-}
-
 .about-text {
   padding: 1.5rem;
-  color: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
   line-height: 1.8;
   font-size: 1.1rem;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-primary);
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
 }
 
 .about-text p {
@@ -323,19 +353,8 @@ const props = defineProps<{
 }
 
 .section-header h2 {
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--text-primary);
   font-size: 1.8rem;
   font-weight: 600;
-}
-
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 </style>

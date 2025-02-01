@@ -63,12 +63,16 @@ const props = defineProps<{
   min-height: 100vh;
   padding: 80px 30px 30px;
   position: relative;
+  transition: background-color 0.3s ease;
+  overflow-x: hidden;
 }
 
 .section {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 20px;
+  background: var(--bg-primary);
+  transition: background-color 0.3s ease;
 }
 
 .header {
@@ -81,9 +85,8 @@ const props = defineProps<{
   font-weight: 600;
   letter-spacing: -0.02em;
   margin-bottom: 3rem;
-  background: linear-gradient(90deg, #FFF 0%, rgba(255, 255, 255, 0.7) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 
 .subtitle {
@@ -126,6 +129,44 @@ const props = defineProps<{
   height: 100px;
   animation: waddle 4s ease-in-out infinite;
   margin-left: 25px;
+  transform: translateX(-450px);
+  position: relative;
+}
+
+.capybara::after {
+  content: '';
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+  width: 100%;
+  height: 20px;
+  background: linear-gradient(
+    to bottom,
+    rgba(157, 91, 210, 0.2),
+    rgba(157, 91, 210, 0.05)
+  );
+  filter: blur(3px);
+  border-radius: 50%;
+  transform: scaleY(0.3);
+  animation: waterReflection 4s ease-in-out infinite;
+}
+
+.capybara::before {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(157, 91, 210, 0.3),
+    rgba(157, 91, 210, 0.3),
+    transparent
+  );
+  border-radius: 50%;
+  animation: waterRipple 3s ease-in-out infinite;
 }
 
 .capybara-body {
@@ -298,13 +339,13 @@ const props = defineProps<{
   display: flex;
   align-items: center;
   padding: 1rem 1.5rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--bg-secondary);
   border-radius: 12px;
   text-decoration: none;
-  color: var(--white-muted);
-  transition: all 0.3s ease;
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
   position: relative;
-  border: 1px solid rgba(157, 91, 210, 0.05);
+  border: 1px solid var(--border-color);
   overflow: hidden;
 }
 
@@ -343,9 +384,10 @@ const props = defineProps<{
   justify-content: center;
   border-radius: 10px;
   font-size: 20px;
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--bg-primary);
   margin-right: 1rem;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  color: var(--text-primary);
 }
 
 .social-link:hover .social-icon {
@@ -357,7 +399,7 @@ const props = defineProps<{
 .social-name {
   font-size: 1.1rem;
   font-weight: 500;
-  color: var(--white-muted);
+  color: var(--text-primary);
   transition: color 0.3s ease;
 }
 
@@ -389,7 +431,8 @@ const props = defineProps<{
 
 /* Иконки без яркого цвета */
 .fa-telegram, .fa-vk { 
-  color: var(--white-dim);
+  color: var(--text-primary);
+  opacity: 0.8;
 }
 
 @keyframes slideUp {
@@ -631,6 +674,28 @@ const props = defineProps<{
 .nav-link:hover {
   background: rgba(255, 255, 255, 0.05);
   transform: translateX(5px);
+}
+
+@keyframes waterReflection {
+  0%, 100% {
+    transform: scaleY(0.3) translateY(0);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scaleY(0.4) translateY(2px);
+    opacity: 0.8;
+  }
+}
+
+@keyframes waterRipple {
+  0%, 100% {
+    transform: scaleX(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scaleX(1.1);
+    opacity: 0.7;
+  }
 }
 </style>
   

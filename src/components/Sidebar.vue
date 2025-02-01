@@ -23,17 +23,79 @@
   justify-content: center;
   border-radius: 12px;
   color: rgba(255, 255, 255, 0.7);
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   background: rgba(147, 51, 234, 0.03);
   border: 1px solid rgba(147, 51, 234, 0.1);
+  overflow: hidden;
 }
 
-.nav-item:hover, .nav-item.active {
+.nav-item::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(
+    circle at center,
+    rgba(147, 51, 234, 0.2),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-item::after {
+  content: '';
+  position: absolute;
+  left: -50%;
+  top: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    transparent,
+    rgba(147, 51, 234, 0.3),
+    transparent 60%
+  );
+  animation: rotate 4s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.nav-item:hover {
   color: #9333EA;
   background: rgba(147, 51, 234, 0.1);
-  border-color: rgba(147, 51, 234, 0.2);
-  transform: translateY(-2px);
+  border-color: rgba(147, 51, 234, 0.3);
+  transform: translateX(10px) scale(1.05);
+  box-shadow: 
+    -5px 0 20px rgba(147, 51, 234, 0.2),
+    0 0 10px rgba(147, 51, 234, 0.1),
+    inset 0 0 15px rgba(147, 51, 234, 0.1);
+}
+
+.nav-item:hover::before,
+.nav-item:hover::after {
+  opacity: 1;
+}
+
+.nav-item.active {
+  color: #9333EA;
+  background: rgba(147, 51, 234, 0.15);
+  border-color: rgba(147, 51, 234, 0.4);
+  transform: translateX(10px);
+  box-shadow: 
+    -8px 0 25px rgba(147, 51, 234, 0.3),
+    0 0 15px rgba(147, 51, 234, 0.2),
+    inset 0 0 20px rgba(147, 51, 234, 0.15);
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .nav-item i {

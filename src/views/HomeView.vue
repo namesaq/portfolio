@@ -1,16 +1,26 @@
 <template>
-  <main class="container">
+  <main class="container" :data-theme="isDark ? 'dark' : 'light'">
     <!-- Левая панель -->
-    <nav class="sidebar">
+    <nav class="sidebar" :data-theme="isDark ? 'dark' : 'light'">
+      <div class="nav-buttons">
+        <button 
+          v-for="(item, index) in menuItems" 
+          :key="index"
+          :class="{ active: activeTab === item.id }" 
+          @click="handleNavClick(item.id)"
+          class="nav-button"
+        >
+          <i :class="item.icon"></i>
+          <span>{{ isEnglish ? item.en : item.ru }}</span>
+        </button>
+      </div>
+      
       <button 
-        v-for="(item, index) in menuItems" 
-        :key="index"
-        :class="{ active: activeTab === item.id }" 
-        @click="handleNavClick(item.id)"
-        class="nav-button"
+        class="theme-toggle" 
+        @click="toggleTheme"
+        :title="isDark ? (isEnglish ? 'Switch to Light Mode' : 'Переключить на светлую тему') : (isEnglish ? 'Switch to Dark Mode' : 'Переключить на темную тему')"
       >
-        <i :class="item.icon"></i>
-        <span>{{ isEnglish ? item.en : item.ru }}</span>
+        <i class="fas" :class="isDark ? 'fa-sun' : 'fa-moon'"></i>
       </button>
     </nav>
 
@@ -41,6 +51,7 @@ import { useHapticFeedback } from '@/composables/useHapticFeedback';
 
 const activeTab = ref(1);
 const isEnglish = ref(false);
+const isDark = ref(true);
 
 const { lightTap } = useHapticFeedback();
 
@@ -51,6 +62,11 @@ const handleNavClick = (id: number) => {
 
 const changeLanguage = (value: boolean) => {
   isEnglish.value = value;
+};
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value;
+  document.documentElement.setAttribute('data-theme', isDark.value ? 'dark' : 'light');
 };
 
 const menuItems = [
@@ -74,6 +90,8 @@ const handleButtonClick = (event: MouseEvent) => {
 .container {
   display: flex;
   min-height: 100vh;
+  background: var(--bg-primary);
+  transition: background-color 0.3s ease;
 }
 
 /* Левая панель */
@@ -88,6 +106,46 @@ const handleButtonClick = (event: MouseEvent) => {
   height: 100vh;
   background: var(--bg-primary);
   z-index: 100;
+  transition: background-color 0.3s ease;
+}
+
+/* Добавляем контейнер для кнопок навигации */
+.nav-buttons {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Добавляем стили для кнопки темы */
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  background: var(--bg-secondary);
+  border: none;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: auto;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle i {
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  color: var(--text-primary);
+  background: var(--hover-bg);
+  transform: scale(1.05);
+}
+
+.theme-toggle:hover i {
+  color: var(--accent-primary);
 }
 
 .sidebar button {
@@ -97,11 +155,13 @@ const handleButtonClick = (event: MouseEvent) => {
   margin-bottom: 0.5rem;
   font-size: 1.1rem;
   cursor: pointer;
-  color: var(--white-muted);
+  color: var(--text-secondary);
   transition: all 0.3s ease;
   width: 100%;
   display: flex;
   align-items: center;
+  position: relative;
+  border-radius: 12px;
 }
 
 .sidebar button i {
@@ -115,13 +175,15 @@ const handleButtonClick = (event: MouseEvent) => {
 }
 
 .sidebar button:hover {
-  color: var(--white-pure);
-  padding-left: 2rem;
+  color: var(--text-primary);
+  padding-left: 2.2rem;
+  background: var(--bg-secondary);
 }
 
 .sidebar button.active {
-  color: var(--white-pure);
-  padding-left: 2rem;
+  color: var(--text-primary);
+  padding-left: 2.2rem;
+  background: var(--bg-secondary);
 }
 
 .sidebar button:hover i,
@@ -129,13 +191,51 @@ const handleButtonClick = (event: MouseEvent) => {
   color: var(--accent-primary);
 }
 
+.sidebar button::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 0;
+  background: var(--accent-primary);
+  transition: height 0.3s ease;
+  opacity: 0.8;
+}
+
+.sidebar button:hover::before {
+  height: 60%;
+}
+
+.sidebar button.active::before {
+  height: 80%;
+}
+
 /* Правая часть */
 .content {
   flex: 1;
   position: relative;
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  margin-left: 240px; /* Равно ширине sidebar */
-  padding-left: 2rem;
+  margin-left: 240px;
+  padding: 2rem;
+  background: var(--bg-primary);
+  min-height: 100vh;
+  transition: background-color 0.3s ease;
+}
+
+.content > * {
+  animation: pageEnter 0.4s ease-out forwards;
+}
+
+@keyframes pageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Переключатель языка */
@@ -145,25 +245,80 @@ const handleButtonClick = (event: MouseEvent) => {
   right: 20px;
   display: flex;
   gap: 2px;
-  background: var(--surface-dark);
-  padding: 2px;
+  background: var(--bg-secondary);
+  padding: 4px;
   border-radius: 12px;
   z-index: 1001;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
 }
 
 .language-switcher button {
   background: transparent;
   border: none;
   padding: 8px 16px;
-  color: var(--white-muted);
-  border-radius: 10px;
-  font-size: 0.9rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 8px;
   font-weight: 500;
+  font-size: 0.9rem;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.language-switcher button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, 
+    var(--bg-primary) 0%, 
+    var(--bg-secondary) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
 .language-switcher button.active {
-  color: var(--white-pure);
-  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.language-switcher button:hover:not(.active) {
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  opacity: 0.8;
+}
+
+.content {
+  margin-left: var(--sidebar-width);
+  min-height: 100vh;
+  background: var(--bg-primary);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow-x: hidden;
+}
+
+.nav-button {
+  background: transparent;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-button.active {
+  color: var(--accent-primary);
+}
+
+.nav-button:hover {
+  color: var(--accent-primary);
 }
 
 /* Мобильные стили */
@@ -177,7 +332,7 @@ const handleButtonClick = (event: MouseEvent) => {
     border-left: none;
     margin-left: 0;
     padding: 1rem;
-    width: 100%;
+    padding-bottom: calc(var(--bottom-nav-height) + 1rem);
   }
 
   .content > * {
@@ -190,11 +345,9 @@ const handleButtonClick = (event: MouseEvent) => {
   }
 
   .language-switcher {
-    position: fixed;
-    top: calc(env(safe-area-inset-top) + 20px);
-    right: 20px;
-    background: rgba(26, 26, 26, 0.9);
-    backdrop-filter: blur(10px);
+    top: calc(env(safe-area-inset-top) + 10px);
+    right: 10px;
+    background: rgba(147, 51, 234, 0.08);
   }
 
   .sidebar {
@@ -302,5 +455,18 @@ const handleButtonClick = (event: MouseEvent) => {
     left: 0;
     width: 100%;
   }
+}
+
+/* Общие стили для основных div-ов */
+.about, .portfolio, .contact {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  transition: all 0.3s ease;
+}
+
+/* Общие стили для section */
+.section {
+  background: var(--bg-primary);
+  transition: all 0.3s ease;
 }
 </style>
