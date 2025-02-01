@@ -1,3 +1,5 @@
+import { ref, onUnmounted } from 'vue';
+
 export function useAnimationOptimization() {
     const requestAnimationFrameId = ref<number>();
 

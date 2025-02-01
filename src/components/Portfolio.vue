@@ -107,12 +107,14 @@ const fullscreenImage = ref<string | null>(null);
 const showDetails = ref(false);
 const loading = ref(true);
 
+const baseUrl = import.meta.env.VITE_BASE_URL;
+
 const projects = ref<Project[]>([
   {
     id: 1,
     title: props.isEnglish ? "LOOK ALIKE" : "LOOK ALIKE",
-    image: "/images/projects/photographer-main.jpg",
-    mainImage: "/images/projects/photographer-main.jpg",
+    image: `${baseUrl}/images/projects/photographer-main.jpg`,
+    mainImage: `${baseUrl}/images/projects/photographer-main.jpg`,
     gallery: [],
     tags: props.isEnglish 
       ? ["Vue.js", "Portfolio", "Web Design"] 
@@ -124,8 +126,8 @@ const projects = ref<Project[]>([
   {
     id: 2,
     title: props.isEnglish ? "Web Application" : "Веб-приложение",
-    image: "/images/projects/project2-main.jpg",
-    mainImage: "/images/projects/project2-main.jpg",
+    image: `${baseUrl}/images/projects/project2-main.jpg`,
+    mainImage: `${baseUrl}/images/projects/project2-main.jpg`,
     gallery: [],
     tags: props.isEnglish 
       ? ["Vue.js", "TypeScript", "UI/UX"] 
@@ -137,8 +139,8 @@ const projects = ref<Project[]>([
   {
     id: 3,
     title: props.isEnglish ? "Mobile Application" : "Мобильное приложение",
-    image: "/images/projects/mobile-app.jpg",
-    mainImage: "/images/projects/mobile-app.jpg",
+    image: `${baseUrl}/images/projects/mobile-app.jpg`,
+    mainImage: `${baseUrl}/images/projects/mobile-app.jpg`,
     gallery: [],
     tags: props.isEnglish 
       ? ["React Native", "TypeScript", "Mobile"] 

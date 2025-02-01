@@ -33,7 +33,7 @@ const close = () => {
 
 const handleTouchStart = (e: TouchEvent) => {
   startY = e.touches[0].clientY;
-  startHeight = e.target.getBoundingClientRect().height;
+  startHeight = (e.target as any).getBoundingClientRect().height;
 };
 
 const handleTouchMove = (e: TouchEvent) => {
