@@ -41,19 +41,20 @@
           </div>
           <div class="skills-grid">
             <div class="skill-category">
-              <h3>Design</h3>
+              <h3>{{ isEnglish ? 'Design' : 'Дизайн' }}</h3>
               <div class="skill-items">
                 <span class="skill-tag">Figma</span>
-                <span class="skill-tag">Adobe XD</span>
+                <span class="skill-tag">SAI</span>
                 <span class="skill-tag">Photoshop</span>
               </div>
             </div>
+
             <div class="skill-category">
-              <h3>Development</h3>
+              <h3>{{ isEnglish ? 'Development' : 'Разработка' }}</h3>
               <div class="skill-items">
                 <span class="skill-tag">Vue.js</span>
-                <span class="skill-tag">TypeScript</span>
-                <span class="skill-tag">SCSS</span>
+                <span class="skill-tag">JavaScript</span>
+                <span class="skill-tag">HTML/CSS</span>
                 <span class="skill-tag">Python</span>
               </div>
             </div>
@@ -68,15 +69,17 @@
           </div>
           <div class="timeline">
             <div class="timeline-item">
-              <div class="timeline-date">2023 - Present</div>
+              <div class="timeline-date">{{ isEnglish ? '2023 - Present' : '2023 - Настоящее время' }}</div>
               <div class="timeline-content">
-                <h3>Web Designer</h3>
+                <h3>{{ isEnglish ? 'Web Designer' : 'Веб-дизайнер' }}</h3>
+                <p>{{ isEnglish ? 'Creating modern and responsive web designs' : 'Создание современных и адаптивных веб-дизайнов' }}</p>
               </div>
             </div>
             <div class="timeline-item">
-              <div class="timeline-date">2020 - 2022</div>
+              <div class="timeline-date">{{ isEnglish ? '2023 - Present' : '2023 - Настоящее время' }}</div>
               <div class="timeline-content">
-                <h3>Frontend Developer</h3>
+                <h3>{{ isEnglish ? 'Frontend Developer' : 'Frontend Разработчик' }}</h3>
+                <p>{{ isEnglish ? 'Development of web applications using Vue.js' : 'Разработка веб-приложений на Vue.js' }}</p>
               </div>
             </div>
           </div>

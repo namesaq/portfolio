@@ -29,22 +29,13 @@
           <i class="fas fa-times"></i>
         </button>
         
-        <!-- Навигационные кнопки -->
-        <button class="nav-button prev" @click.stop="prevProject">
-          <i class="fas fa-chevron-left"></i>
-        </button>
-        <button class="nav-button next" @click.stop="nextProject">
-          <i class="fas fa-chevron-right"></i>
-        </button>
-        
-        <!-- Добавляем индикатор прогресса -->
-        <div class="progress-indicator">
-          <div 
-            v-for="(project, index) in projects" 
-            :key="project.id"
-            :class="['progress-dot', { active: selectedProject?.id === project.id }]"
-            @click="selectedProject = projects[index]"
-          ></div>
+        <div class="modal-nav">
+          <button class="modal-nav-button" @click="prevProject">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="modal-nav-button" @click="nextProject">
+            <i class="fas fa-chevron-right"></i>
+          </button>
         </div>
 
         <div class="modal-gallery">
@@ -57,14 +48,6 @@
             <div class="project-tags">
               <span v-for="tag in selectedProject.tags" :key="tag" class="tag">{{ tag }}</span>
             </div>
-          </div>
-          <div class="gallery-grid">
-            <img v-for="image in selectedProject.gallery" 
-                 :key="image" 
-                 :src="image" 
-                 :alt="selectedProject.title"
-                 @click="openFullImage(image)"
-            >
           </div>
         </div>
       </div>
@@ -105,7 +88,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { useHapticFeedback } from '@/composables/useHapticFeedback';
 import BottomSheet from '@/components/BottomSheet.vue';
 
-defineProps<{
+const props = defineProps<{
   isEnglish: boolean
 }>();
 
@@ -122,49 +105,47 @@ interface Project {
 const selectedProject = ref<Project | null>(null);
 const fullscreenImage = ref<string | null>(null);
 const showDetails = ref(false);
+const loading = ref(true);
 
 const projects = ref<Project[]>([
   {
     id: 1,
-    title: "Modern Web Application",
-    image: "/project1.jpg",
-    mainImage: "/main1.jpg",
-    gallery: [
-      "/gallery1.jpg",
-      "/gallery2.jpg",
-      "/gallery3.jpg",
-      "/gallery4.jpg"
-    ],
-    tags: ["Vue.js", "TypeScript", "UI/UX"],
-    description: "Современное веб-приложение с адаптивным дизайном"
+    title: props.isEnglish ? "LOOK ALIKE" : "LOOK ALIKE",
+    image: "/images/projects/photographer-main.jpg",
+    mainImage: "/images/projects/photographer-main.jpg",
+    gallery: [],
+    tags: props.isEnglish 
+      ? ["Vue.js", "Portfolio", "Web Design"] 
+      : ["Vue.js", "Портфолио", "Веб-дизайн"],
+    description: props.isEnglish 
+      ? "Professional photographer portfolio website with modern design and responsive interface. The site is designed to showcase works and attract new clients."
+      : "Профессиональный сайт-портфолио фотографа с современным дизайном и адаптивным интерфейсом. Сайт разработан для демонстрации работ и привлечения новых клиентов."
   },
   {
     id: 2,
-    title: "E-commerce Platform",
-    image: "/project2.jpg",
-    mainImage: "/main2.jpg",
-    gallery: [
-      "/gallery5.jpg",
-      "/gallery6.jpg",
-      "/gallery7.jpg",
-      "/gallery8.jpg"
-    ],
-    tags: ["React", "Node.js", "E-commerce"],
-    description: "Платформа электронной коммерции"
+    title: props.isEnglish ? "Web Application" : "Веб-приложение",
+    image: "/images/projects/project2-main.jpg",
+    mainImage: "/images/projects/project2-main.jpg",
+    gallery: [],
+    tags: props.isEnglish 
+      ? ["Vue.js", "TypeScript", "UI/UX"] 
+      : ["Vue.js", "TypeScript", "UI/UX"],
+    description: props.isEnglish 
+      ? "Modern web application with responsive design and interactive interface"
+      : "Современное веб-приложение с адаптивным дизайном и интерактивным интерфейсом"
   },
   {
     id: 3,
-    title: "Mobile Application",
-    image: "/project3.jpg",
-    mainImage: "/main3.jpg",
-    gallery: [
-      "/gallery9.jpg",
-      "/gallery10.jpg",
-      "/gallery11.jpg",
-      "/gallery12.jpg"
-    ],
-    tags: ["Mobile", "React Native", "UX"],
-    description: "Мобильное приложение"
+    title: props.isEnglish ? "Mobile Application" : "Мобильное приложение",
+    image: "/images/projects/mobile-app.jpg",
+    mainImage: "/images/projects/mobile-app.jpg",
+    gallery: [],
+    tags: props.isEnglish 
+      ? ["React Native", "TypeScript", "Mobile"] 
+      : ["React Native", "TypeScript", "Мобильная разработка"],
+    description: props.isEnglish 
+      ? "Cross-platform mobile application with modern design and smooth animations"
+      : "Кроссплатформенное мобильное приложение с современным дизайном и плавными анимациями"
   }
 ]);
 
@@ -235,12 +216,14 @@ const handleKeyPress = (e: KeyboardEvent) => {
 let touchStartX = 0;
 let touchEndX = 0;
 
-const handleTouchStart = (e: TouchEvent) => {
-  touchStartX = e.touches[0].clientX;
+const handleTouchStart = (e: Event) => {
+  const touchEvent = e as TouchEvent;
+  touchStartX = touchEvent.touches[0].clientX;
 };
 
-const handleTouchMove = (e: TouchEvent) => {
-  touchEndX = e.touches[0].clientX;
+const handleTouchMove = (e: Event) => {
+  const touchEvent = e as TouchEvent;
+  touchEndX = touchEvent.touches[0].clientX;
 };
 
 const handleTouchEnd = () => {
@@ -259,18 +242,18 @@ const handleTouchEnd = () => {
 onMounted(() => {
   const modalContent = document.querySelector('.modal-content');
   if (modalContent) {
-    modalContent.addEventListener('touchstart', handleTouchStart);
-    modalContent.addEventListener('touchmove', handleTouchMove);
-    modalContent.addEventListener('touchend', handleTouchEnd);
+    modalContent.addEventListener('touchstart', handleTouchStart as EventListener);
+    modalContent.addEventListener('touchmove', handleTouchMove as EventListener);
+    modalContent.addEventListener('touchend', handleTouchEnd as EventListener);
   }
 });
 
 onUnmounted(() => {
   const modalContent = document.querySelector('.modal-content');
   if (modalContent) {
-    modalContent.removeEventListener('touchstart', handleTouchStart);
-    modalContent.removeEventListener('touchmove', handleTouchMove);
-    modalContent.removeEventListener('touchend', handleTouchEnd);
+    modalContent.removeEventListener('touchstart', handleTouchStart as EventListener);
+    modalContent.removeEventListener('touchmove', handleTouchMove as EventListener);
+    modalContent.removeEventListener('touchend', handleTouchEnd as EventListener);
   }
 });
 
@@ -329,12 +312,14 @@ const openProjectDetails = (project: Project) => {
   color: var(--text-primary);
   font-size: 2.5rem;
   margin-bottom: 2rem;
+  padding: 0 20px;
 }
 
 .projects {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 2rem;
+  padding: 0 20px;
 }
 
 .project {
@@ -344,12 +329,13 @@ const openProjectDetails = (project: Project) => {
   border: 1px solid var(--border-color);
   transition: all 0.3s ease;
   cursor: pointer;
+  position: relative;
 }
 
 .project:hover {
   transform: translateY(-5px);
   border-color: var(--accent-primary);
-  box-shadow: 0 10px 30px rgba(147, 51, 234, 0.1);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
 }
 
 .project-content {
@@ -365,6 +351,12 @@ const openProjectDetails = (project: Project) => {
   height: 100%;
   background-size: cover;
   background-position: center;
+  filter: none;
+  transition: all 0.3s ease;
+}
+
+.project:hover .project-image {
+  transform: scale(1.05);
 }
 
 .project-overlay {
@@ -373,40 +365,115 @@ const openProjectDetails = (project: Project) => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.8)
+  );
   display: flex;
   align-items: flex-end;
   padding: 1.5rem;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+  opacity: 1;
+  transition: all 0.3s ease;
+  z-index: 1;
 }
 
 .project:hover .project-overlay {
-  opacity: 1;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0),
+    rgba(0, 0, 0, 0.9)
+  );
 }
 
 .project-info {
   color: #fff;
+  z-index: 2;
+  position: relative;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
 }
 
 .project-title {
-  font-size: 1.5rem;
+  color: #fff;
+  font-size: 1.8rem;
   margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  font-weight: 600;
+  filter: none !important;
+}
+
+.project .project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.project .tag {
+  padding: 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 100px;
+  font-size: 0.9rem;
+  color: #fff;
+  transition: all 0.3s ease;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
+}
+
+.project:hover .tag {
+  background: rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 .project-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
+  position: relative;
+  z-index: 2;
 }
 
 .tag {
   padding: 0.5rem 1rem;
-  background: var(--bg-primary);
-  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 100px;
   font-size: 0.9rem;
-  color: var(--text-primary);
+  color: #fff;
+  transition: all 0.3s ease;
+  filter: none !important;
+}
+
+.tag:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.gallery-grid img {
+  width: 100%;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-grid img:hover {
+  transform: scale(1.05);
 }
 
 /* Модальное окно */
@@ -416,7 +483,8 @@ const openProjectDetails = (project: Project) => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -425,23 +493,25 @@ const openProjectDetails = (project: Project) => {
 
 .modal-content {
   background: var(--bg-primary);
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 2rem;
-  max-width: 90%;
+  width: 90%;
+  max-width: 1200px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
   border: 1px solid var(--border-color);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
 }
 
 .modal-close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 2rem;
+  right: 2rem;
   background: var(--bg-secondary);
   border: none;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -449,38 +519,82 @@ const openProjectDetails = (project: Project) => {
   cursor: pointer;
   color: var(--text-primary);
   transition: all 0.3s ease;
+  z-index: 1;
+  font-size: 1.2rem;
 }
 
 .modal-close:hover {
   background: var(--hover-bg);
   color: var(--accent-primary);
+  transform: rotate(90deg);
 }
 
 .modal-gallery {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
+}
+
+.gallery-main {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .gallery-main img {
   width: 100%;
-  border-radius: 10px;
+  height: 100%;
+  display: block;
+  border-radius: 16px;
+  object-fit: cover;
 }
 
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+.project-info {
+  padding: 2rem;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  margin-top: 2rem;
+  border: 1px solid var(--border-color);
 }
 
-.gallery-grid img {
-  width: 100%;
-  border-radius: 10px;
-  cursor: pointer;
-  transition: transform 0.3s ease;
+.project-info h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
 }
 
-.gallery-grid img:hover {
-  transform: scale(1.05);
+.project-info p {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.tag {
+  padding: 0.8rem 1.5rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 100px;
+  font-size: 1rem;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+  backdrop-filter: none;
+  filter: none !important;
+}
+
+.tag:hover {
+  background: var(--bg-secondary);
+  transform: translateY(-2px);
+  border-color: var(--accent-primary);
 }
 
 /* Полноэкранное изображение */
@@ -952,6 +1066,153 @@ const openProjectDetails = (project: Project) => {
 .portfolio-tag:hover {
   background: rgba(147, 51, 234, 0.2);
   transform: translateY(-2px);
+}
+
+.project-title {
+  color: #fff;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s ease;
+}
+
+.project .project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+.project .tag {
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+  font-size: 0.9rem;
+  color: #fff;
+  transition: all 0.3s ease;
+  filter: none !important;
+}
+
+.project .tag:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Стили для тегов в модальном окне */
+.modal .project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.modal .project-info .tag {
+  padding: 0.8rem 1.5rem !important;
+  background: var(--bg-primary) !important;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 100px !important;
+  font-size: 1rem !important;
+  color: var(--text-primary) !important;
+  transition: all 0.3s ease !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+.modal .project-info .tag:hover {
+  background: var(--bg-secondary) !important;
+  transform: translateY(-2px) !important;
+  border-color: var(--accent-primary) !important;
+}
+
+/* Стрелки навигации в модальном окне */
+.modal-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  width: calc(100% - 4rem);
+  padding: 10px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.modal-nav-button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-color);
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  pointer-events: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+
+.modal-nav-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at center,
+    rgba(147, 51, 234, 0.15),
+    transparent 70%
+  );
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.modal-nav-button:hover {
+  transform: scale(1.1);
+  border-color: rgba(147, 51, 234, 0.6);
+  box-shadow: 
+    0 6px 16px rgba(0, 0, 0, 0.15),
+    0 0 20px rgba(147, 51, 234, 0.3);
+}
+
+.modal-nav-button:hover::before {
+  opacity: 1;
+}
+
+.modal-nav-button i {
+  font-size: 1.2rem;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+  color: var(--text-primary);
+}
+
+.modal-nav-button:hover i {
+  color: rgba(147, 51, 234, 0.8);
+  transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+  .modal-nav {
+    padding: 0 1rem;
+  }
+
+  .modal-nav-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .modal-nav-button i {
+    font-size: 1rem;
+  }
 }
 </style>
 

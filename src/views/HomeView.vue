@@ -14,6 +14,27 @@
           <span>{{ isEnglish ? item.en : item.ru }}</span>
         </button>
       </div>
+
+      <!-- Капибара -->
+      <div class="capybara-wrapper">
+        <div class="water"></div>
+        <div class="capybara-container">
+          <div class="capybara">
+            <div class="capybara-body"></div>
+            <div class="capybara-head">
+              <div class="capybara-ear"></div>
+              <div class="capybara-eye"></div>
+              <div class="capybara-nose"></div>
+            </div>
+            <div class="capybara-legs">
+              <div class="leg front-left"></div>
+              <div class="leg front-right"></div>
+              <div class="leg back-left"></div>
+              <div class="leg back-right"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       
       <button 
         class="theme-toggle" 
@@ -114,6 +135,7 @@ const handleButtonClick = (event: MouseEvent) => {
   flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
 }
 
 /* Добавляем стили для кнопки темы */
@@ -468,5 +490,201 @@ const handleButtonClick = (event: MouseEvent) => {
 .section {
   background: var(--bg-primary);
   transition: all 0.3s ease;
+}
+
+.home {
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.capybara-wrapper {
+  width: 100%;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.capybara-container {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scaleX(-1);
+}
+
+.water {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90px;
+  height: 12px;
+  background: rgba(147, 51, 234, 0.15);
+  border-radius: 50%;
+  animation: waterRipple 3s ease-in-out infinite;
+}
+
+.water::before {
+  content: '';
+  position: absolute;
+  bottom: 3px;
+  left: 50%;
+  transform: translateX(-50%) scaleY(0.3);
+  width: 70px;
+  height: 8px;
+  background: rgba(147, 51, 234, 0.2);
+  border-radius: 50%;
+  animation: waterReflection 3s ease-in-out infinite;
+}
+
+.capybara {
+  width: 80px;
+  height: 60px;
+  position: relative;
+  animation: float 4s ease-in-out infinite;
+}
+
+.capybara-body {
+  position: absolute;
+  width: 60px;
+  height: 40px;
+  background: rgba(147, 51, 234, 0.15);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  border-radius: 20px 25px 15px 10px;
+  bottom: 5px;
+  right: 5px;
+  transform: rotate(-2deg);
+  transform-origin: bottom center;
+  animation: bodyFloat 4s ease-in-out infinite;
+}
+
+.capybara-head {
+  position: absolute;
+  width: 40px;
+  height: 32px;
+  background: rgba(147, 51, 234, 0.15);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  border-radius: 12px 15px 10px 8px;
+  right: 55px;
+  bottom: 15px;
+  animation: headFloat 4s ease-in-out infinite;
+}
+
+.capybara-ear {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: rgba(147, 51, 234, 0.15);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  border-radius: 50%;
+  right: 5px;
+  top: -2px;
+}
+
+.capybara-eye {
+  position: absolute;
+  width: 5px;
+  height: 3px;
+  background: rgba(147, 51, 234, 0.4);
+  border-radius: 50%;
+  left: 15px;
+  top: 10px;
+  animation: blink 4s ease-in-out infinite;
+}
+
+.capybara-nose {
+  position: absolute;
+  width: 10px;
+  height: 7px;
+  background: rgba(147, 51, 234, 0.3);
+  border-radius: 6px 5px 5px 5px;
+  left: 1px;
+  top: 15px;
+}
+
+.capybara-legs .leg {
+  position: absolute;
+  width: 6px;
+  height: 10px;
+  background: rgba(147, 51, 234, 0.15);
+  border: 1px solid rgba(147, 51, 234, 0.3);
+  border-radius: 3px;
+}
+
+.leg.front-left {
+  left: 20px;
+  bottom: 0;
+  animation: legMove 2s ease-in-out infinite;
+}
+
+.leg.front-right {
+  left: 30px;
+  bottom: 0;
+  animation: legMove 2s ease-in-out infinite 0.5s;
+}
+
+.leg.back-left {
+  right: 25px;
+  bottom: 0;
+  animation: legMove 2s ease-in-out infinite 1s;
+}
+
+.leg.back-right {
+  right: 18px;
+  bottom: 0;
+  animation: legMove 2s ease-in-out infinite 1.5s;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+@keyframes bodyFloat {
+  0%, 100% { transform: rotate(-2deg) translateY(0); }
+  50% { transform: rotate(2deg) translateY(-3px); }
+}
+
+@keyframes headFloat {
+  0%, 100% { transform: rotate(0deg) translateY(0); }
+  50% { transform: rotate(4deg) translateY(-5px); }
+}
+
+@keyframes waterRipple {
+  0%, 100% { 
+    transform: translateX(-50%) scaleX(1);
+    opacity: 0.7;
+  }
+  50% { 
+    transform: translateX(-50%) scaleX(1.15);
+    opacity: 0.9;
+  }
+}
+
+@keyframes waterReflection {
+  0%, 100% {
+    transform: translateX(-50%) scaleY(0.3);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateX(-50%) scaleY(0.4) translateY(3px);
+    opacity: 1;
+  }
+}
+
+@keyframes blink {
+  0%, 45%, 55%, 100% { transform: scaleY(1); opacity: 0.8; }
+  50% { transform: scaleY(0.1); opacity: 0.6; }
+}
+
+@keyframes legMove {
+  0%, 100% { transform: translateY(0); }
+  25% { transform: translateY(-2px) rotate(3deg); }
+  75% { transform: translateY(0) rotate(-3deg); }
 }
 </style>
